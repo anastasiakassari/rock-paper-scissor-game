@@ -4,3 +4,4 @@ build/
 !**/src/test/**/build/
 .java-version
 .idea/
+.gradle/
