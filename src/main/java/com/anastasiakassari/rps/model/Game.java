@@ -99,10 +99,10 @@ public class Game {
         Move player1Move = player1.makeMove();
         Move player2Move = player2.makeMove();
         if (player1Move == player2Move) {
-            logger.debug("Tie between {} and {} with moves {} and {}", player1.getName(), player2.getName(), player1Move, player2Move);
+            logger.debug("Round {} is a tie, both moves were {}", round, player1Move);
             return null;
         } else {
-            logger.debug("Round {} between {} and {} with moves {} and {}", round, player1.getName(), player2.getName(), player1Move, player2Move);
+            logger.debug("Round {} with moves {} (player {}) and {} (player {})", round, player1Move, player1.getName(), player2Move, player2.getName());
             return player1Move.beats(player2Move) ? player1 : player2;
         }
     }
