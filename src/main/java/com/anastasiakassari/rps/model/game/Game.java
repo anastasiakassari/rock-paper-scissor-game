@@ -1,26 +1,45 @@
-package com.anastasiakassari.rps.model;
+package com.anastasiakassari.rps.model.game;
 
+import com.anastasiakassari.rps.model.Player;
 import com.anastasiakassari.rps.model.move.Move;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
-import java.util.Optional;
 
 /**
  * Represents a game of Rock, Paper, Scissors between two players.
  */
 public class Game {
-    @NotNull(message = "Players cannot be null")
+
     private final Player player1;
-    @NotNull(message = "Players cannot be null")
     private final Player player2;
-    @Positive(message = "Number of rounds must be positive")
     private final int rounds;
-    private Optional<Player> winner;
+    private GameResult result;
 
     private final Logger logger = LoggerFactory.getLogger(Game.class);
+
+    /**
+     * Retrieves the first player of the game.
+     * @return player1 of the game
+     */
+    public Player getPlayer1() {
+        return player1;
+    }
+
+    /**
+     * Retrieves the second player of the game.
+     * @return player2 of the game
+     */
+    public Player getPlayer2() {
+        return player2;
+    }
+
+    /**
+     * Retrieves the result of the game.
+     * @return the result of the game
+     */
+    public GameResult getResult() {
+        return result;
+    }
 
     /**
      * Constructs a single round game.
@@ -39,6 +58,16 @@ public class Game {
      */
     public Game(Player player1, Player player2, int rounds) {
 
+        // Ensure that the players are not null
+        if (player1 == null || player2 == null) {
+            throw new IllegalArgumentException("Players cannot be null.");
+        }
+
+        // Ensure that the players are different
+        if (player1.equals(player2)) {
+            throw new IllegalArgumentException("Players cannot be the same.");
+        }
+
         // Ensure that the number of rounds is positive
         if (rounds <= 0) {
             throw new IllegalArgumentException("Number of rounds must be positive.");
@@ -47,7 +76,6 @@ public class Game {
         this.player1 = player1;
         this.player2 = player2;
         this.rounds = rounds;
-        this.winner = Optional.empty();
     }
 
     /**
@@ -72,20 +100,14 @@ public class Game {
         logger.info("Player {} wins {} of {} games", player2.getName(), player2Score, rounds);
         logger.info("Tie: {} of {} games", rounds - player1Score - player2Score, rounds);
 
-        // Determine the overall winner
+        // Determine the overall game result
         if (player1Score > player2Score) {
-            this.winner = Optional.of(player1);
+            result = GameResult.PLAYER_ONE_WIN;
         } else if (player1Score < player2Score) {
-            this.winner = Optional.of(player2);
+            result = GameResult.PLAYER_TWO_WIN;
+        } else {
+            result = GameResult.TIE;
         }
-    }
-
-    /**
-     * Retrieves the winner of the game.
-     * @return an Optional containing the winning player or empty if there is no winner
-     */
-    public Optional<Player> getWinner() {
-        return winner;
     }
 
     /**

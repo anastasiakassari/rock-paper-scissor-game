@@ -1,9 +1,10 @@
 package com.anastasiakassari.rps.app;
 
-import com.anastasiakassari.rps.model.move.FixedMoveStrategy;
-import com.anastasiakassari.rps.model.Game;
-import com.anastasiakassari.rps.model.move.Move;
 import com.anastasiakassari.rps.model.Player;
+import com.anastasiakassari.rps.model.game.Game;
+import com.anastasiakassari.rps.model.game.GameResult;
+import com.anastasiakassari.rps.model.move.FixedMoveStrategy;
+import com.anastasiakassari.rps.model.move.Move;
 import com.anastasiakassari.rps.model.move.RandomMoveStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,12 @@ public class RockPaperScissorsApp {
         );
         game.play();
 
-        logger.info("The winner of the game is: {}", game.getWinner().map(Player::getName).orElse("Nobody"));
+        GameResult result = game.getResult();
+        String winner = switch (result) {
+            case PLAYER_ONE_WIN -> game.getPlayer1().getName();
+            case PLAYER_TWO_WIN -> game.getPlayer2().getName();
+            case TIE -> "Nobody (tie)";
+        };
+        logger.info("The winner of the game is: {}!", winner);
     }
 }

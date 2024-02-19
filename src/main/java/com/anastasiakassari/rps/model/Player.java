@@ -3,17 +3,12 @@ package com.anastasiakassari.rps.model;
 import com.anastasiakassari.rps.model.move.Move;
 import com.anastasiakassari.rps.model.move.MoveStrategy;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 /**
  * Represents a player in a game.
  */
 public class Player {
-    @NotNull(message = "Moves cannot be null")
-    MoveStrategy moveStrategy;
 
-    @NotBlank(message = "Name cannot be blank")
+    MoveStrategy moveStrategy;
     final String name;
 
     /**
@@ -22,6 +17,17 @@ public class Player {
      * @param moveStrategy the move strategy of the player
      */
     public Player(String name, MoveStrategy moveStrategy) {
+
+        // Ensure that the name is not null
+        if (name == null) {
+            throw new IllegalArgumentException("Name cannot be null.");
+        }
+
+        // Ensure that the move strategy is not null
+        if (moveStrategy == null) {
+            throw new IllegalArgumentException("Move strategy cannot be null.");
+        }
+
         this.name = name;
         this.moveStrategy = moveStrategy;
     }
@@ -40,6 +46,19 @@ public class Player {
      */
     public Move makeMove() {
         return moveStrategy.makeMove();
+    }
+
+    /**
+     * Overrides the equals method to compare Player objects.     *
+     * @param o The object to compare with.
+     * @return True if the objects are equal, false otherwise.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Player player = (Player) o;
+        return name.equals(player.name) && moveStrategy.equals(player.moveStrategy);
     }
 }
 
